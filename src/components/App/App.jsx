@@ -6,27 +6,16 @@ import { Notification } from 'components/Notification/Notification';
 import css from './App.module.css';
 
 export const App = () => {
-  const [feedbacks, setFeedbacks] = useState({
-    good: 0,
-    neutral: 0,
-    bad: 0,
-  });
-
-  const updateFeedbacks = value => {
-    setFeedbacks(prevState => ({
-      ...prevState,
-      [value]: prevState[value] + 1,
-    }));
-  };
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
 
   const countTotalFeedback = () => {
-    return Object.values(feedbacks).reduce((total, feedback) => {
-      return total + feedback;
-    }, 0);
+    return good + neutral + bad;
   };
 
   const countPositiveFeedbackPercentage = () => {
-    return Math.round((feedbacks.good * 100) / countTotalFeedback());
+    return Math.round((good * 100) / countTotalFeedback());
   };
 
   return (
@@ -34,8 +23,9 @@ export const App = () => {
       <h1 className={css.header}>Cafe Espresso</h1>
       <Section title="Please leave feedback">
         <FeedbackOptions
-          options={feedbacks}
-          onLeaveFeedback={updateFeedbacks}
+          good={setGood}
+          neutral={setNeutral}
+          bad={setBad}
         />
       </Section>
       <Section title="Statistics">
@@ -43,9 +33,9 @@ export const App = () => {
           <Notification message="There is no feedback" />
         ) : (
           <Statistics
-            good={feedbacks.good}
-            neutral={feedbacks.neutral}
-            bad={feedbacks.bad}
+            good={good}
+            neutral={neutral}
+            bad={bad}
             total={countTotalFeedback()}
             positivePercentage={countPositiveFeedbackPercentage()}
           />
